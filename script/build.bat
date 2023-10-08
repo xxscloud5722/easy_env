@@ -1,12 +1,12 @@
 @echo off
 
-cd ../
+cd ../src
+go mod tidy
 go env -w CGO_ENABLED=1
 
 @rem Windows
 go env -w GOOS=windows
-go mod tidy
-go build -o ./dist/server.exe src/main.go
+go build -o ../dist/server.exe main.go
 
 @rem Linux
 @rem go env -w CGO_ENABLED=0
