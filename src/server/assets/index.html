@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<!--suppress HtmlDeprecatedAttribute -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Key/Value 键值对管理</title>
+    <style>
+        .delete {
+            cursor: pointer;
+            color: blue;
+        }
+
+        .delete:hover {
+            text-decoration: underline;
+        }
+
+        #create {
+            display: none;
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            background: #fff;
+            padding: 100px;
+        }
+
+        .row {
+            margin: 12px 0;
+        }
+
+        pre {
+            padding: 6px;
+            background: #efefef;
+            border-radius: 6px;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+<div style="margin: 10px 0">
+    <label>
+        <input id="accessToken" placeholder="在此输入AccessToken"/>
+    </label>
+    <button onclick="refresh()">刷新数据</button>
+    &nbsp;|&nbsp;
+    <button onclick="onCreateDialog()">新增数据</button>
+</div>
+<table border="1">
+    <thead>
+    <tr>
+        <th style="min-width: 140px; text-align: left">序号</th>
+        <th style="min-width: 160px; text-align: left">字段描述</th>
+        <th style="min-width: 200px; text-align: left">key</th>
+        <th style="min-width: 400px; text-align: left">value</th>
+        <th style="min-width: 140px; text-align: left">操作面板</th>
+    </tr>
+    </thead>
+    <tbody id="tbody">
+    </tbody>
+</table>
+<div id="create">
+    <div class="row">
+        <label>
+            Key:
+            <input type="text" id="key">
+        </label>
+    </div>
+    <div class="row">
+        <label>
+            Description:
+            <input type="text" id="description"/>
+        </label>
+    </div>
+    <div class="row">
+        <label>
+            Value:
+            <textarea id="value"></textarea>
+        </label>
+    </div>
+    <div class="row">
+        <button onclick="onKeySave()">保存</button>
+        <button onclick="onKeyCancel()">取消</button>
+    </div>
+</div>
+<script>
+    function get(path, callback) {
+        let xhr = new XMLHttpRequest()
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                callback && callback(JSON.parse(xhr.responseText))
+            }
+        };
+        xhr.open('GET', path, true)
+        xhr.send()
+    }
+
+    function post(path, body, callback) {
+        let xhr = new XMLHttpRequest()
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                callback && callback(JSON.parse(xhr.responseText))
+            }
+        };
+        xhr.open('POST', path, true)
+        xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8')
+        xhr.send(JSON.stringify(body))
+    }
+
+    function getAccessToken() {
+        return document.getElementById("accessToken").value.trim();
+    }
+
+    function onDelete(key) {
+        if (confirm("确定删除" + key + "吗？")) {
+            post("/pair/remove?access-token=" + getAccessToken(), {key: key}, function (response) {
+                alert(' (' + response.success + ') ' + (response.message || ''));
+                if (response.success) {
+                    refresh();
+                }
+            });
+        } else {
+            alert('取消了删除!')
+        }
+    }
+
+    function onKeySave() {
+        const key = document.getElementById('key').value;
+        const value = document.getElementById('value').value;
+        const description = document.getElementById('description').value;
+        post("/pair/save?access-token=" + getAccessToken(), {
+            key: key,
+            value: value,
+            description: description
+        }, function (response) {
+            alert(' (' + response.success + ') ' + (response.message || ''));
+            onKeyCancel();
+            if (response.success) {
+                refresh();
+            }
+        });
+    }
+
+    function onKeyCancel() {
+        document.getElementById('key').value = '';
+        document.getElementById('description').value = '';
+        document.getElementById('value').value = '';
+        document.getElementById('create').style.display = 'none';
+    }
+
+    function onCreateDialog() {
+        if (getAccessToken() === '') {
+            alert('请输入AccessToken')
+            return
+        }
+        document.getElementById('create').style.display = 'block';
+    }
+
+    function refresh() {
+        if (getAccessToken() === '') {
+            alert('请输入AccessToken')
+            return
+        }
+        document.getElementById("tbody").innerHTML = '';
+        get("/pair/list?access-token=" + getAccessToken(), function (response) {
+            var html = '';
+            var list = (response.data || []);
+            for (let i = 0; i < list.length; i++) {
+                var item = list[i];
+                html += `<tr>
+                            <td>${i + 1}</td>
+                            <td>${item.description || ''}</td>
+                            <td>${item.key}</td>
+                            <td><pre>${item.value.replaceAll('<', '&lt;').replaceAll('>', '&gt;')}</pre></td>
+                            <td>
+                                <a class="delete" onclick="onDelete('${item.key}')">删除</a>
+                            </td>
+                        </tr>`;
+            }
+            document.getElementById("tbody").innerHTML = html;
+        });
+    }
+
+</script>
+</body>
+</html>
