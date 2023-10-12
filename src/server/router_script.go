@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/nuwa/server.v3/bean"
 	"github.com/nuwa/server.v3/service"
+	"net/http"
 	"os"
 	"strings"
 )
@@ -47,12 +48,15 @@ func (server *Server) LoadScript() {
 		return nil, scriptService.Remove(script.Id)
 	}))
 
-	server.GET("/sh/*scriptPath", ResponseApiF(func(context *gin.Context) (any, error) {
-		var path = strings.TrimRight(strings.TrimLeft(context.Param("scriptPath"), "/sh"), ".sh")
+	server.GET("/sh/*scriptPath", func(context *gin.Context) {
+		var path = context.Param("scriptPath")
 		script, err := scriptService.GetByPath(path)
 		if err != nil {
-			return nil, err
+			context.String(http.StatusOK, "")
 		}
-		return script.Value, nil
-	}))
+		if script == nil {
+			context.String(http.StatusOK, "")
+		}
+		context.String(http.StatusOK, script.Value)
+	})
 }

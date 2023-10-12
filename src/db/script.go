@@ -19,7 +19,9 @@ func (db *SQLiteDB) GetScript(id string) (*bean.Script, error) {
 	if err != nil {
 		return nil, err
 	}
-	return lo.If(len(result) > 0, &result[0]).Else(nil), nil
+	return lo.IfF(len(result) > 0, func() *bean.Script {
+		return &result[0]
+	}).Else(nil), nil
 }
 
 func (db *SQLiteDB) GetScriptByPath(path string) (*bean.Script, error) {
@@ -34,7 +36,9 @@ func (db *SQLiteDB) GetScriptByPath(path string) (*bean.Script, error) {
 	if err != nil {
 		return nil, err
 	}
-	return lo.If(len(result) > 0, &result[0]).Else(nil), nil
+	return lo.IfF(len(result) > 0, func() *bean.Script {
+		return &result[0]
+	}).Else(nil), nil
 }
 
 func getQueryResult(rows *sql.Rows) ([]bean.Script, error) {
