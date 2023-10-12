@@ -62,6 +62,8 @@ func cmdServer(port, accessToken string, enable bool) error {
 	gin.SetMode(gin.ReleaseMode)
 	var s = server.NewServer()
 	s.LoadPair()
+	s.LoadScript()
+	s.LoadFiles()
 	s.LoadPing(enable)
 	color.Green(fmt.Sprintf("Server started successfully (Port: %s)..", port))
 	color.Blue("AccessToken: " + accessToken)
