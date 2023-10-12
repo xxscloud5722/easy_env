@@ -14,3 +14,16 @@ type Script struct {
 	Value       string `json:"value,omitempty"`
 	Description string `json:"description,omitempty"`
 }
+
+type FileInfo struct {
+	Name        string `json:"name,omitempty"`
+	Last        string `json:"last,omitempty"`
+	Size        string `json:"size,omitempty"`
+	Description string `json:"description,omitempty"`
+	Path        string `json:"path,omitempty"`
+}
+
+type DirInfo struct {
+	Name string `json:"name,omitempty"`
+	Path string `json:"path,omitempty"`
+}

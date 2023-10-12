@@ -61,6 +61,7 @@ func cmdServer(port, accessToken string, enable bool) error {
 	}
 	gin.SetMode(gin.ReleaseMode)
 	var s = server.NewServer()
+	s.LoadHTMLGlob("templates/*")
 	s.LoadPair()
 	s.LoadScript()
 	s.LoadFiles()

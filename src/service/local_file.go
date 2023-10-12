@@ -1,6 +1,8 @@
 package service
 
 import (
+	"fmt"
+	"github.com/nuwa/server.v3/bean"
 	"github.com/samber/lo"
 	"os"
 	"path"
@@ -21,19 +23,32 @@ func (localFile *LocalFile) Init() error {
 	return nil
 }
 
-func (localFile *LocalFile) ListLocalFile(localPath string) ([]string, []string, error) {
-	files, err := os.ReadDir(localPath)
+func (localFile *LocalFile) ListLocalFile(localPath string) ([]*bean.DirInfo, []*bean.FileInfo, error) {
+	var filePath = path.Join(localFile.Root, localPath)
+	files, err := os.ReadDir(filePath)
 	if err != nil {
 		return nil, nil, err
 	}
 	return lo.Map(lo.Filter(files, func(item os.DirEntry, index int) bool {
 			return item.IsDir()
-		}), func(item os.DirEntry, index int) string {
-			return item.Name()
-		}), lo.Map(lo.Filter(files, func(item os.DirEntry, index int) bool {
+		}), func(item os.DirEntry, index int) *bean.DirInfo {
+			return &bean.DirInfo{
+				Name: item.Name(),
+			}
+		}), lo.Filter(lo.Map(lo.Filter(files, func(item os.DirEntry, index int) bool {
 			return !item.IsDir()
-		}), func(item os.DirEntry, index int) string {
-			return item.Name()
+		}), func(item os.DirEntry, index int) *bean.FileInfo {
+			info, err := item.Info()
+			if err != nil {
+				return nil
+			}
+			return &bean.FileInfo{
+				Name: item.Name(),
+				Last: info.ModTime().Format("2006-01-02 15:04:05"),
+				Size: formatStorageSize(info.Size()),
+			}
+		}), func(item *bean.FileInfo, index int) bool {
+			return item != nil
 		}), nil
 }
 
@@ -57,4 +72,28 @@ func (localFile *LocalFile) IsDir(localPath string) (*bool, error) {
 
 func (localFile *LocalFile) GetFilePath(localPath string) string {
 	return path.Join(localFile.Root, localPath)
+}
+
+func formatStorageSize(kilobytes int64) string {
+	const (
+		KB = 1.0
+		MB = KB * 1024
+		GB = MB * 1024
+		TB = GB * 1024
+		PB = TB * 1024
+	)
+
+	// 选择适当的单位
+	switch {
+	case kilobytes < MB:
+		return fmt.Sprintf("%.2f KB", float64(kilobytes)/KB)
+	case kilobytes < GB:
+		return fmt.Sprintf("%.2f MB", float64(kilobytes)/MB)
+	case kilobytes < TB:
+		return fmt.Sprintf("%.2f GB", float64(kilobytes)/GB)
+	case kilobytes < PB:
+		return fmt.Sprintf("%.2f TB", float64(kilobytes)/TB)
+	default:
+		return fmt.Sprintf("%.2f PB", float64(kilobytes)/PB)
+	}
 }
