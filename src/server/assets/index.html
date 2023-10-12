@@ -148,6 +148,18 @@
         document.getElementById('create').style.display = 'none';
     }
 
+    function onEdit(key, value, description) {
+        debugger;
+        if (getAccessToken() === '') {
+            alert('请输入AccessToken')
+            return
+        }
+        document.getElementById('create').style.display = 'block';
+        document.getElementById('key').value = decodeURIComponent(key);
+        document.getElementById('value').value = decodeURIComponent(value);
+        document.getElementById('description').value = decodeURIComponent(description);
+    }
+
     function onCreateDialog() {
         if (getAccessToken() === '') {
             alert('请输入AccessToken')
@@ -173,6 +185,8 @@
                             <td>${item.key}</td>
                             <td><pre>${item.value.replaceAll('<', '&lt;').replaceAll('>', '&gt;')}</pre></td>
                             <td>
+                                <a class="delete" onclick="onEdit('${encodeURIComponent(item.key)}', '${encodeURIComponent(item.value)}', '${encodeURIComponent(item.description)}')">编辑</a>
+                                &nbsp;&nbsp;
                                 <a class="delete" onclick="onDelete('${item.key}')">删除</a>
                             </td>
                         </tr>`;

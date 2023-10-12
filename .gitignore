@@ -1,3 +1,5 @@
 .idea/
 *.db
 dist/
+adminUI/node_modules
+AdminUI/package-lock.json
