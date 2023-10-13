@@ -27,7 +27,7 @@ func (server *Server) LoadPing(enable bool) {
 				context.File(filePath)
 				return
 			} else {
-				context.File(path.Join("E:\\code\\xxscloud\\github\\bpp\\server\\AdminUI\\dist", "index.html"))
+				context.File(path.Join("./AdminUI", "index.html"))
 			}
 		})
 	}
