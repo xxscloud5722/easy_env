@@ -9,7 +9,7 @@ export type JsonResponse<T> = {
 };
 
 export default class Fetch {
-  private pathPrefix = '/api';
+  private pathPrefix = import.meta.env.VITE_REQUEST_BASE_URL?.toString();
 
   async post<T>(path: string, params?: any, body?: any): Promise<JsonResponse<T>> {
     const paramQuery = this.searchParams(params);

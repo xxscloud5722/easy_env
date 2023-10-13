@@ -64,7 +64,7 @@ const App: FC = () => {
       }
     }}>
       <ProConfigProvider hashed={false}>
-        <BrowserRouter>
+        <BrowserRouter basename={import.meta.env.VITE_ROUTE_BASE?.toString()}>
           <ProLayout
             fixSiderbar={true}
             layout="mix"

@@ -3,12 +3,10 @@ package server
 import (
 	_ "embed"
 	"github.com/gin-gonic/gin"
-	"net/http"
+	"os"
+	"path"
 	"time"
 )
-
-//go:embed assets/index.html
-var indexFile string
 
 func (server *Server) LoadPing(enable bool) {
 	server.GET("/ping", ResponseApiF(func(context *gin.Context) (any, error) {
@@ -22,9 +20,15 @@ func (server *Server) LoadPing(enable bool) {
 	}))
 	// 控制台页面
 	if enable {
-		server.GET("/admin", func(c *gin.Context) {
-			c.Header("Content-Type", "text/html; charset=utf-8")
-			c.String(http.StatusOK, indexFile)
+		server.GET("/admin/*filepath", func(context *gin.Context) {
+			filePath := context.Param("filepath")
+			filePath = path.Join("E:\\code\\xxscloud\\github\\bpp\\server\\AdminUI\\dist", filePath)
+			if _, err := os.Stat(filePath); err == nil || os.IsExist(err) {
+				context.File(filePath)
+				return
+			} else {
+				context.File(path.Join("E:\\code\\xxscloud\\github\\bpp\\server\\AdminUI\\dist", "index.html"))
+			}
 		})
 	}
 }
