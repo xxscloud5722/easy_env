@@ -41,10 +41,21 @@ func NewSQLiteDB() (*SQLiteDB, error) {
 	_, err = db.Exec(`
 		CREATE TABLE IF NOT EXISTS script (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
-			name TEXT,
-			path TEXT UNIQUE,
+			name TEXT UNIQUE,
+			path TEXT,
 			value TEXT,
 			description TEXT
+		)
+	`)
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = db.Exec(`
+		CREATE TABLE IF NOT EXISTS script_directory (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			name TEXT,
+			parent_id INTEGER
 		)
 	`)
 	if err != nil {

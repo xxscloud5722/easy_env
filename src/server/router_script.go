@@ -29,6 +29,9 @@ func (server *Server) LoadScript() {
 	api.GET("/list", ResponseApiF(func(context *gin.Context) (any, error) {
 		var name = context.Query("name")
 		var path = context.Query("path")
+		if strings.HasPrefix(path, "ROOT/") {
+			path = path[5:]
+		}
 		return scriptService.List(name, path)
 	}))
 	api.POST("/save", ResponseApiF(func(context *gin.Context) (any, error) {
@@ -36,6 +39,9 @@ func (server *Server) LoadScript() {
 		err := context.ShouldBindJSON(&script)
 		if err != nil {
 			return nil, err
+		}
+		if strings.HasPrefix(script.Path, "ROOT/") {
+			script.Path = script.Path[5:]
 		}
 		return nil, scriptService.Save(script)
 	}))
@@ -46,6 +52,35 @@ func (server *Server) LoadScript() {
 			return nil, err
 		}
 		return nil, scriptService.Remove(script.Id)
+	}))
+
+	apiDirectory := server.Group("/script-directory")
+	apiDirectory.GET("/list", ResponseApiF(func(context *gin.Context) (any, error) {
+		return scriptService.ListDirectory()
+	}))
+	apiDirectory.POST("/create", ResponseApiF(func(context *gin.Context) (any, error) {
+		var directory bean.ScriptDirectory
+		err := context.ShouldBindJSON(&directory)
+		if err != nil {
+			return nil, err
+		}
+		return nil, scriptService.CreateDirectory(directory.ParentId, directory.Name)
+	}))
+	apiDirectory.POST("/remove", ResponseApiF(func(context *gin.Context) (any, error) {
+		var directory bean.ScriptDirectory
+		err := context.ShouldBindJSON(&directory)
+		if err != nil {
+			return nil, err
+		}
+		return nil, scriptService.RemoveDirectory(directory.Id)
+	}))
+	apiDirectory.POST("/rename", ResponseApiF(func(context *gin.Context) (any, error) {
+		var directory bean.ScriptDirectory
+		err := context.ShouldBindJSON(&directory)
+		if err != nil {
+			return nil, err
+		}
+		return nil, scriptService.RenameDirectory(directory.Id, directory.Name)
 	}))
 
 	server.GET("/sh/*scriptPath", func(context *gin.Context) {

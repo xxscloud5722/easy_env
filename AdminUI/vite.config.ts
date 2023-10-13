@@ -14,8 +14,8 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://sh.aomaowl.com',
-        //rewrite: (path: { replace: (arg0: RegExp, arg1: string) => any; }) => path.replace(/^\/api/, ''),
+        target: 'http://127.0.0.1:8080',
+        rewrite: (path: { replace: (arg0: RegExp, arg1: string) => any; }) => path.replace(/^\/api/, ''),
         changeOrigin: true
       }
     }

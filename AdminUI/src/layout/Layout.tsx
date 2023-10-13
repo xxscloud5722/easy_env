@@ -1,19 +1,19 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { MenuDataItem, ProConfigProvider, ProLayout } from '@ant-design/pro-components';
-import { ConfigProvider, theme } from 'antd';
+import { ConfigProvider, Input, Modal, theme } from 'antd';
 import { css } from '@emotion/css';
-import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Link, Navigate, Route, Routes } from 'react-router-dom';
 import ImageLayout01 from '@assets/layout_01.png';
 import ImageLayout02 from '@assets/layout_02.png';
 import ImageLayout03 from '@assets/layout_03.png';
-import ImageModule from '@assets/module.svg';
 import ImageLogo from '@assets/logo.svg';
 import commonApi from '@/apis/common-api.ts';
 import KeyValuePage from '@/pages/KeyValuePage.tsx';
 import ScriptPage from '@/pages/ScriptPage.tsx';
+import session from '@/apis/session.ts';
 
 const App: FC = () => {
-
+  const [pathname, setPathname] = useState('/');
   const requestMenuItem = async (_params: Record<string, any>, _defaultMenuData: MenuDataItem[]): Promise<MenuDataItem[]> => {
     const menusResponse = await commonApi.getUserMenus();
     const recursion = (menus: any[]): MenuDataItem[] => {
@@ -31,15 +31,22 @@ const App: FC = () => {
     }
     return [];
   };
-
+  const [dialogTokenModal, setDialogTokenModal] = useState(false);
+  const [token, setToken] = useState('');
+  const onConfirmToken = () => {
+    session.saveToken(token);
+    setDialogTokenModal(false);
+    window.location.reload();
+  };
+  useEffect(() => {
+    if (session.getToken() === undefined) {
+      setDialogTokenModal(true);
+    }
+  }, []);
   return (
     <ConfigProvider theme={{
       algorithm: theme.defaultAlgorithm,
       token: {
-        // TODO 需要UI 给处主题色
-        // colorPrimary: '#006aff',
-        // colorPrimaryBg: '#e6f0ff',
-        // colorLink: '#006aff',
         borderRadius: 4
       },
       components: {
@@ -111,18 +118,23 @@ const App: FC = () => {
             menu={{
               request: requestMenuItem
             }}
+            location={{
+              pathname
+            }}
             menuItemRender={(props, defaultDom) => {
               if (props.isUrl || !props.path) {
                 return defaultDom;
               }
-              return <Link to={props.path}>{defaultDom}</Link>;
+              return <Link to={props.path} onClick={() => {
+                setPathname(props.path || '/');
+              }}>{defaultDom}</Link>;
             }}
             headerContentRender={(_, defaultDom) => {
               return <>
                 {defaultDom}
               </>;
             }}
-            menuExtraRender={(props) => (
+            menuExtraRender={() => (
               <div className={css`
                 display: flex;
                 height: 36px;
@@ -142,8 +154,7 @@ const App: FC = () => {
                   overflow: hidden;
                 }
               `}>
-                <img src={ImageModule} alt=""/>
-                {props.collapsed ? undefined : <p>企微助手</p>}
+                <img src={ImageLogo} alt=""/>
               </div>
             )}
             logo={<div className={css`
@@ -160,10 +171,26 @@ const App: FC = () => {
           >
             <div style={{ padding: '20px 20px 20px 20px' }}>
               <Routes>
+                <Route path="/" Component={() => <Navigate to="/kv"/>}/>
                 <Route path="/kv" Component={KeyValuePage}/>
                 <Route path="/script" Component={ScriptPage}/>
               </Routes>
             </div>
+            <Modal
+              open={dialogTokenModal}
+              title="输入令牌"
+              width="420px"
+              destroyOnClose={false}
+              closeIcon={false}
+              cancelText={null}
+              onOk={() => onConfirmToken()}
+              styles={{ body: { padding: '10px 0' } }}
+            >
+              <Input
+                placeholder="请输入令牌"
+                value={token}
+                onChange={(e) => setToken(e.target.value)}/>
+            </Modal>
           </ProLayout>
         </BrowserRouter>
       </ProConfigProvider>

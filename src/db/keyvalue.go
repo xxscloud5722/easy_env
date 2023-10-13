@@ -46,9 +46,9 @@ func (db *SQLiteDB) List(prefix string) ([]bean.Pair, error) {
 	var rows *sql.Rows
 	var err error
 	if prefix == "" {
-		rows, err = db.Query("SELECT `id`, `key`, IFNULL(`value`, ''), IFNULL(`description`, '') FROM `pair` ORDER BY `id` ASC")
+		rows, err = db.Query("SELECT `id`, `key`, IFNULL(`value`, ''), IFNULL(`description`, '') FROM `pair` ORDER BY `id` DESC")
 	} else {
-		rows, err = db.Query("SELECT `id`, `key`, IFNULL(`value`, ''), IFNULL(`description`, '') FROM `pair` WHERE `key` LIKE ? || '%' ORDER BY `id` ASC", prefix)
+		rows, err = db.Query("SELECT `id`, `key`, IFNULL(`value`, ''), IFNULL(`description`, '') FROM `pair` WHERE `key` LIKE ? || '%' ORDER BY `id` DESC", prefix)
 	}
 	if err != nil {
 		return nil, err

@@ -15,6 +15,12 @@ type Script struct {
 	Description string `json:"description,omitempty"`
 }
 
+type ScriptDirectory struct {
+	Id       int    `json:"id,omitempty"`
+	Name     string `json:"name,omitempty"`
+	ParentId int    `json:"parentId,omitempty"`
+}
+
 type FileInfo struct {
 	Name        string `json:"name,omitempty"`
 	Last        string `json:"last,omitempty"`

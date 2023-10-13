@@ -1,4 +1,5 @@
 import { RequestData } from '@ant-design/pro-components';
+import session from '@/apis/session.ts';
 
 export type JsonResponse<T> = {
   success: boolean;
@@ -11,11 +12,7 @@ export default class Fetch {
   private pathPrefix = '/api';
 
   async post<T>(path: string, params?: any, body?: any): Promise<JsonResponse<T>> {
-    const paramQuery = new URLSearchParams();
-    Object.keys(params || {})
-      .forEach(key => {
-        paramQuery.append(key, params[key]);
-      });
+    const paramQuery = this.searchParams(params);
     const response = await fetch(this.pathPrefix + path + (paramQuery.toString() === '' ? '' : '?') + paramQuery.toString(), {
       method: 'POST',
       headers: {
@@ -28,11 +25,7 @@ export default class Fetch {
   }
 
   async get<T>(path: string, params?: any): Promise<JsonResponse<T>> {
-    const paramQuery = new URLSearchParams();
-    Object.keys(params || {})
-      .forEach(key => {
-        paramQuery.append(key, params[key]);
-      });
+    const paramQuery = this.searchParams(params);
     const response = await fetch(this.pathPrefix + path + '?' + paramQuery.toString(), {
       method: 'GET',
       headers: {
@@ -40,6 +33,20 @@ export default class Fetch {
       }
     });
     return this.responseJson<T>(response);
+  }
+
+  private searchParams(params?: any): URLSearchParams {
+    const paramQuery = new URLSearchParams();
+    Object.keys(params || {})
+      .forEach(key => {
+        paramQuery.append(key, params[key]);
+      });
+    const defaultQuery: any = { 'access-token': session.getToken() };
+    Object.keys(defaultQuery || {})
+      .forEach(key => {
+        paramQuery.append(key, defaultQuery[key]);
+      });
+    return paramQuery;
   }
 
   async cache<T>(key: string, callback: () => Promise<T>) {
@@ -66,7 +73,7 @@ export default class Fetch {
   }
 
   authorization() {
-    return { Authorization: 'Bearer USER.5f249800d1404efcab30e6d7005f8e8e.652f3c54' };
+    return {};
   }
 
   async responseJson<T>(response: Response): Promise<JsonResponse<T>> {
@@ -83,9 +90,9 @@ export default class Fetch {
 
   async pageTable<T>(response: JsonResponse<any>): Promise<Partial<RequestData<T>>> {
     return {
-      data: response.data.records || response.data,
-      page: response.data.currentPage || 1,
-      total: response.data.totalSize || response.data.length,
+      data: (response.data || {}).records || (response.data || []),
+      page: (response.data || {}).currentPage || 1,
+      total: (response.data || {}).totalSize || (response.data || []).length,
       success: response.success
     } as RequestData<T>;
   }
