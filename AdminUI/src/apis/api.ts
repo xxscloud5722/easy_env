@@ -16,7 +16,6 @@ export default class Fetch {
     const response = await fetch(this.pathPrefix + path + (paramQuery.toString() === '' ? '' : '?') + paramQuery.toString(), {
       method: 'POST',
       headers: {
-        ...this.authorization(),
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(body || {})
@@ -28,9 +27,7 @@ export default class Fetch {
     const paramQuery = this.searchParams(params);
     const response = await fetch(this.pathPrefix + path + '?' + paramQuery.toString(), {
       method: 'GET',
-      headers: {
-        ...this.authorization()
-      }
+      headers: {}
     });
     return this.responseJson<T>(response);
   }
@@ -70,10 +67,6 @@ export default class Fetch {
     const response = await callback();
     (window as any)[cacheKey] = JSON.stringify(response);
     return response as T;
-  }
-
-  authorization() {
-    return {};
   }
 
   async responseJson<T>(response: Response): Promise<JsonResponse<T>> {

@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState } from 'react';
 import { MenuDataItem, ProConfigProvider, ProLayout } from '@ant-design/pro-components';
-import { ConfigProvider, Input, Modal, theme } from 'antd';
+import { Button, ConfigProvider, Input, Modal, theme } from 'antd';
 import { css } from '@emotion/css';
 import { BrowserRouter, Link, Navigate, Route, Routes } from 'react-router-dom';
 import ImageLayout01 from '@assets/layout_01.png';
@@ -34,6 +34,9 @@ const App: FC = () => {
   const [dialogTokenModal, setDialogTokenModal] = useState(false);
   const [token, setToken] = useState('');
   const onConfirmToken = () => {
+    if (token === '') {
+      return;
+    }
     session.saveToken(token);
     setDialogTokenModal(false);
     window.location.reload();
@@ -183,9 +186,10 @@ const App: FC = () => {
               destroyOnClose={false}
               closeIcon={false}
               cancelText={null}
-              onOk={() => onConfirmToken()}
               styles={{ body: { padding: '10px 0' } }}
-            >
+              footer={[
+                <Button key="submit" onClick={() => onConfirmToken()} type="primary">确定</Button>
+              ]}>
               <Input
                 placeholder="请输入令牌"
                 value={token}
