@@ -42,7 +42,8 @@ const App: FC = () => {
     window.location.reload();
   };
   useEffect(() => {
-    if (session.getToken() === undefined) {
+    if (!(window.location.host.indexOf('127.0.0.1') > -1 || window.location.host.indexOf('localhost') > -1)
+      && session.getToken() === undefined) {
       setDialogTokenModal(true);
     }
   }, []);

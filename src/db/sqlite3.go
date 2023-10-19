@@ -62,5 +62,12 @@ func NewSQLiteDB() (*SQLiteDB, error) {
 		return nil, err
 	}
 
+	_, err = db.Exec(`
+		INSERT OR IGNORE INTO script_directory (id, name, parent_id) VALUES (1, 'ROOT', 0);
+	`)
+	if err != nil {
+		return nil, err
+	}
+
 	return &SQLiteDB{db}, nil
 }

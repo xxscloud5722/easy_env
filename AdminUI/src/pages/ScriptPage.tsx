@@ -204,7 +204,6 @@ export default () => {
                     <a style={{ marginRight: '6px' }} className={css`
                       height: 22px;
                       width: 22px;
-                      display: block;
 
                       & > .icon {
                         margin: 1px 0 0 3px;
@@ -267,7 +266,6 @@ export default () => {
                 <a style={{ marginRight: '6px' }} className={css`
                   height: 22px;
                   width: 22px;
-                  display: block;
 
                   & > .icon {
                     margin: 1px 0 0 3px;
@@ -383,6 +381,10 @@ export default () => {
 
                   & .ant-tree-switcher-leaf-line:after {
                     margin-top: 2px;
+                  }
+
+                  & .ant-tree-treenode-selected .dropdown-a {
+                    display: block !important;
                   }
                 `}
               />
