@@ -3,6 +3,7 @@ package server
 import (
 	_ "embed"
 	"github.com/gin-gonic/gin"
+	"log"
 	"os"
 	"path"
 	"time"
@@ -22,11 +23,13 @@ func (server *Server) LoadPing(enable bool) {
 	if enable {
 		server.GET("/admin/*filepath", func(context *gin.Context) {
 			filePath := context.Param("filepath")
-			filePath = path.Join("E:\\code\\xxscloud\\github\\bpp\\server\\AdminUI\\dist", filePath)
+			filePath = path.Join("./AdminUI", filePath)
 			if _, err := os.Stat(filePath); err == nil || os.IsExist(err) {
+				log.Printf("[filePath]: " + filePath)
 				context.File(filePath)
 				return
 			} else {
+				log.Printf("[filePath]: not file " + filePath + "? return index.html")
 				context.File(path.Join("./AdminUI", "index.html"))
 			}
 		})
