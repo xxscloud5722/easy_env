@@ -12,20 +12,20 @@ The language advantages of golang make it very easy to deploy and use.
 
 # Dependency requirements
 
-> - `github.com/gin-gonic/gin`
-> - `github.com/fatih/color`
-> - `github.com/samber/lo`
-> - `github.com/spf13/cobra`
+- `github.com/gin-gonic/gin`
+- `github.com/fatih/color`
+- `github.com/samber/lo`
+- `github.com/spf13/cobra`
 
 Minimum Supported Golang Version is 1.20.
 
 
 # Getting started
 
-## Download package 
-(latest version 2.0.1)[]
+**Download package**
+[latest version 2.0.1](https://github.com/xxscloud5722/easy_env/releases)
 
-## Program compilation
+**Program compilation**
 - Goalng 1.9
 - Node v16.x
 
@@ -64,11 +64,10 @@ Confirm that the program has been downloaded or programming is completed.
 # cli help
 envcli -help
 
-
 ```
 
 # Contributors
 
 Thanks for your contributions!
 
-- [@xiaoliuya]()
+- [@xiaoliuya](https://github.com/xxscloud5722/)
