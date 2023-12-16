@@ -1,37 +1,74 @@
-# Golang KeyValue Server (女娲)
+# Easy Env
 
-> `女娲` 项目名称来源: 女娲造人
+`easy env` is a simple secure environment variable manager.
 
-> 基于SQLite 开发的简单`KeyValue 服务器` 且还提供了随机令牌保证安全访问
+The language advantages of golang make it very easy to deploy and use.
 
-## 解决场景
+`easy eny` plays an obvious role in development, construction and CI environments
 
-在`CI-CD` 下脚本或者程序需要很多全局变量实现构建，但是Gitlab 仅支持 20个环境变量，且还不安全，
-因此自己创建一个简单KeyValue 服务器解决，`分布式构建`环境变量参数问题
+- Support Console manager
+- Support security tokens
+- Local storage data security
 
-## 功能描述
+# Dependency requirements
 
-> 1. 支持KeyValue 存储、查询、修改
-> 2. 基于SQLite 本地数据库
-> 3. 提供安全访问（随机令牌）
-> 4. 提供简单管理页面
-> 5. Go 语言开发非常轻量级
+> - `github.com/gin-gonic/gin`
+> - `github.com/fatih/color`
+> - `github.com/samber/lo`
+> - `github.com/spf13/cobra`
 
-## 使用方法
+Minimum Supported Golang Version is 1.20.
+
+
+# Getting started
+
+## Download package 
+(latest version 2.0.1)[]
+
+## Program compilation
+- Goalng 1.9
+- Node v16.x
 
 ```bash
-# 启用服务随机令牌
-server
+# Admin UI
+# npm
+cd ./AdminUI
+npm install && npm build
 
-# 启用指定令牌
-server -t fa4c7d95a39787f5b62b824b901950e4
+# Easy Server
+cd ./Server
+# window OR linux
+go env -w GOOS=linux
+go mod tidy
+go build -o ../dist/server.exe src/main.go
 
-# 启用管理端
-server -t fa4c7d95a39787f5b62b824b901950e4 -a enable
+# Easy Cli
+cd ./Cli
+# window OR linux
+go env -w GOOS=linux
+go mod tidy
+go build -o ../dist/server.exe src/main.go
 ```
 
-## 鸣谢
 
-> 作者：C猫
 
-> 邮箱：735802488@qq.com
+# Easy Demo
+Confirm that the program has been downloaded or programming is completed.
+
+```bash
+# start the server
+# -t [token]    Assign token
+# -a enable     Enable UI Console
+./server -t fa4c7d95a39787f5b62b824b901950e4 -a enable
+
+# cli help
+envcli -help
+
+
+```
+
+# Contributors
+
+Thanks for your contributions!
+
+- [@xiaoliuya]()
