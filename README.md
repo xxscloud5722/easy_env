@@ -1,5 +1,7 @@
 # Easy Env
 
+![image text](images/logo_2.png)
+
 `easy env` is a simple secure environment variable manager.
 
 The language advantages of golang make it very easy to deploy and use.
@@ -71,3 +73,9 @@ envcli -help
 Thanks for your contributions!
 
 - [@xiaoliuya](https://github.com/xxscloud5722/)
+
+
+# Zen
+China's open source has changed its flavor and become a KPI indicator for promotion and salary increase, which goes against the spirit of open source.
+
+Use this to warn self Staying true to our founding mission.
