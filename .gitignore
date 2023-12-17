@@ -4,3 +4,4 @@ dist/
 AdminUI/node_modules
 AdminUI/package-lock.json
 Server/go.sum
+Server/config/

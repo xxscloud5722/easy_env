@@ -1,7 +1,9 @@
 package routers
 
 import (
+	_ "embed"
 	"github.com/gin-gonic/gin"
+	"github.com/xxscloud5722/easy_env/server/src/app"
 	"log"
 	"os"
 	"path"
@@ -13,7 +15,7 @@ func (server *Gin) LoadIndex(enable bool) {
 		return "pong", nil
 	}))
 	server.GET("/version", responseApiF(func(context *gin.Context) (any, error) {
-		return "1.2.0", nil
+		return app.Info().Version, nil
 	}))
 	server.GET("/datetime", responseApiF(func(context *gin.Context) (any, error) {
 		return time.Now().Format(time.DateTime), nil
