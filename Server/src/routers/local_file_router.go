@@ -3,8 +3,10 @@ package routers
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/samber/lo"
+	"github.com/xxscloud5722/easy_env/server/src/app"
 	"github.com/xxscloud5722/easy_env/server/src/bean"
 	"github.com/xxscloud5722/easy_env/server/src/service"
+	"html/template"
 	"net/http"
 	"strings"
 )
@@ -21,13 +23,13 @@ func (server *Gin) LoadFiles() {
 		// Path Is Exist
 		exist := localFileService.IsExist(path)
 		if !exist {
-			context.HTML(http.StatusOK, "404.html", gin.H{})
+			_ = rendering("404").Execute(context.Writer, gin.H{})
 			return
 		}
 		// Is Dir
 		isDir, err := localFileService.IsDir(path)
 		if err != nil {
-			context.HTML(http.StatusOK, "500.html", gin.H{})
+			_ = rendering("500").Execute(context.Writer, gin.H{})
 			return
 		}
 		// Scan Dir Index.
@@ -40,7 +42,7 @@ func (server *Gin) LoadFiles() {
 				return
 			}
 			var paths = strings.Split(path, "/")
-			context.HTML(http.StatusOK, "files.html", gin.H{
+			_ = rendering("files").Execute(context.Writer, gin.H{
 				"title": "Index of /" + path,
 				"directory": lo.Map(directory, func(item *bean.DirInfo, index int) *bean.DirInfo {
 					item.Path = "/files/" + path + lo.If(path == "", "").Else("/") + item.Name
@@ -61,4 +63,10 @@ func (server *Gin) LoadFiles() {
 		// Is File Return
 		context.File(localFileService.GetFilePath(path))
 	})
+}
+
+func rendering(key string) *template.Template {
+	htmlTemplate := app.Template()[key]
+	tmpl, _ := template.New("html").Parse(htmlTemplate)
+	return tmpl
 }
