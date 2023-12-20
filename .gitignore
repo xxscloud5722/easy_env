@@ -7,3 +7,4 @@ Server/go.sum
 Server/config/
 Server/src/app/admin/
 Server/main.exe
+Cli/go.sum
