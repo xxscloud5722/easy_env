@@ -4,13 +4,8 @@ import (
 	"fmt"
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
+	"github.com/xxscloud5722/easy_env/server/src/server"
 )
-
-type Args struct {
-	Port  int    // server Port
-	Token string // set Token
-	Admin bool   // enable Admin
-}
 
 func main() {
 	var serverCmd = &cobra.Command{
@@ -33,12 +28,12 @@ func main() {
 				color.Red(fmt.Sprint(err))
 				return
 			}
-			var args = &Args{
+			var args = &server.Args{
 				Port:  port,
 				Token: token,
 				Admin: admin,
 			}
-			err = startServer(args)
+			err = server.StartServer(args)
 			if err != nil {
 				color.Red(fmt.Sprint(err))
 				return

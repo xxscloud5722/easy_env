@@ -1,4 +1,4 @@
-package main
+package server
 
 import (
 	"fmt"
@@ -6,8 +6,14 @@ import (
 	"github.com/xxscloud5722/easy_env/server/src/routers"
 )
 
-// startServer Run Server.
-func startServer(args *Args) error {
+type Args struct {
+	Port  int    // server Port
+	Token string // set Token
+	Admin bool   // enable Admin
+}
+
+// StartServer Run Server.
+func StartServer(args *Args) error {
 	gin.SetMode(gin.ReleaseMode)
 	var server = routers.Gin{Engine: gin.Default()}
 	server.LoadIndex(args.Admin)
