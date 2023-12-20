@@ -4,9 +4,11 @@ import (
 	_ "embed"
 	"github.com/gin-gonic/gin"
 	"github.com/xxscloud5722/easy_env/server/src/app"
-	"log"
-	"os"
-	"path"
+	"io/fs"
+	"mime"
+	"net/http"
+	"path/filepath"
+	"strings"
 	"time"
 )
 
@@ -27,15 +29,28 @@ func (server *Gin) LoadIndex(enable bool) {
 	if enable {
 		server.GET("/admin/*filepath", func(context *gin.Context) {
 			filePath := context.Param("filepath")
-			filePath = path.Join("./AdminUI", filePath)
-			if _, err := os.Stat(filePath); err == nil || os.IsExist(err) {
-				log.Printf("[filePath]: " + filePath)
-				context.File(filePath)
-				return
-			} else {
-				log.Printf("[filePath]: not file " + filePath + "? return index.html")
-				context.File(path.Join("./AdminUI", "index.html"))
+			localFile, err := app.AdminDir.Open("admin" + filePath)
+			if err == nil {
+				var fileInfo fs.FileInfo
+				fileInfo, err = localFile.Stat()
+				if err != nil {
+					return
+				}
+				if !fileInfo.IsDir() {
+					var bytes []byte
+					bytes, err = app.AdminDir.ReadFile("admin" + filePath)
+					if err != nil {
+						return
+					}
+					context.Data(http.StatusOK, mime.TypeByExtension(strings.ToLower(filepath.Ext(fileInfo.Name()))), bytes)
+					return
+				}
 			}
+			bytes, err := app.AdminDir.ReadFile("admin/index.html")
+			if err != nil {
+				return
+			}
+			context.Data(http.StatusOK, "text/html", bytes)
 		})
 	}
 }

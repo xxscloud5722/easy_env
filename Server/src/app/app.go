@@ -1,6 +1,7 @@
 package app
 
 import (
+	"embed"
 	_ "embed"
 	"gopkg.in/yaml.v3"
 	"log"
@@ -17,6 +18,9 @@ var template500 string
 
 //go:embed files.html
 var templateFiles string
+
+//go:embed admin/*
+var AdminDir embed.FS
 
 var (
 	app      *App

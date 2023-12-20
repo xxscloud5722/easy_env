@@ -5,3 +5,4 @@ AdminUI/node_modules
 AdminUI/package-lock.json
 Server/go.sum
 Server/config/
+Server/src/app/admin/
