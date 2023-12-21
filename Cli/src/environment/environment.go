@@ -154,22 +154,13 @@ func valueParse(value string) string {
 	return value
 }
 
-// getServer Server Info
-func getServer() (*string, *string, error) {
-	return &serverUrl, &serverToken, nil
-}
-
 // post
 func post(path string, data map[string]interface{}) ([]byte, error) {
-	url, accessToken, err := getServer()
-	if err != nil {
-		return nil, err
-	}
 	jsonData, err := json.Marshal(data)
 	if err != nil {
 		return nil, err
 	}
-	request, err := http.NewRequest("POST", fmt.Sprintf("%s%s?access-token=%s", *url, path, *accessToken), bytes.NewBuffer(jsonData))
+	request, err := http.NewRequest("POST", fmt.Sprintf("%s%s?access-token=%s", serverUrl, path, serverToken), bytes.NewBuffer(jsonData))
 	if err != nil {
 		return nil, err
 	}
@@ -186,11 +177,7 @@ func post(path string, data map[string]interface{}) ([]byte, error) {
 
 // get
 func get(path string) ([]byte, error) {
-	url, accessToken, err := getServer()
-	if err != nil {
-		return nil, err
-	}
-	response, err := http.Get(fmt.Sprintf("%s%s?access-token=%s", *url, path, *accessToken))
+	response, err := http.Get(fmt.Sprintf("%s%s?access-token=%s", serverUrl, path, serverToken))
 	if err != nil {
 		return nil, err
 	}

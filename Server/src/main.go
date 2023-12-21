@@ -43,7 +43,7 @@ func main() {
 	serverCmd.Flags().IntP("port", "p", 8080, "Enable Admin Console")
 	serverCmd.Flags().StringP("token", "t", "", "Api Auth AccessToken")
 	serverCmd.Flags().BoolP("admin", "a", false, "Enable Admin Console")
-
+	serverCmd.CompletionOptions.HiddenDefaultCmd = true
 	err := serverCmd.Execute()
 	if err != nil {
 		return

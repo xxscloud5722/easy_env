@@ -5,7 +5,7 @@ import (
 	"os"
 )
 
-// PrintTable 输出Table.
+// PrintTable Out Table.
 func PrintTable(header []string, dataSources [][]string) {
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetHeader(header)

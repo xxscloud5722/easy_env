@@ -78,6 +78,7 @@ func main() {
 			}
 		},
 	})
+	cliCmd.CompletionOptions.HiddenDefaultCmd = true
 	err := cliCmd.Execute()
 	if err != nil {
 		return
