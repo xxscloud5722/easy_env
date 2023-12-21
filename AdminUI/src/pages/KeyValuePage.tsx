@@ -146,7 +146,7 @@ export default () => {
         keyValue.id === undefined ? '新建键值对' : '键值对管理'} width="560px" styles={{ body: { padding: '10px 0' } }}>
         <Form>
           <Form.Item label="名称">
-            <Input value={keyValue.key} onChange={(e) => setFieldValue('key', e.target.value.trim())}/>
+            <Input value={keyValue.key} readOnly={keyValue.id !== undefined} onChange={(e) => setFieldValue('key', e.target.value.trim())}/>
           </Form.Item>
           <Form.Item label="描述">
             <Input value={keyValue.description} onChange={(e) => setFieldValue('description', e.target.value)}/>
