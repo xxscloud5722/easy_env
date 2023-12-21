@@ -19,7 +19,7 @@ func identityFilter(context *gin.Context) {
 	if strings.HasPrefix(ip, "127.0.0.1") || accessToken == os.Getenv("AccessToken") {
 		context.Next()
 	} else {
-		responseApiError(context, "401", "AccessToken Invalid")
+		responseApiError(context, "1401", "AccessToken Invalid")
 		context.Abort()
 	}
 }

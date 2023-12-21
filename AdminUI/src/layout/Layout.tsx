@@ -18,7 +18,7 @@ const App: FC = () => {
     if (token === '') {
       return;
     }
-    localStorage.setItem('login_user', JSON.stringify({ token }));
+    sessionStorage.setItem('login_user', JSON.stringify({ token }));
     setDialogTokenModal(false);
     window.location.reload();
   };
