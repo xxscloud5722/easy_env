@@ -39,17 +39,17 @@ npm install && npm build
 
 # Easy Server
 cd ./Server
-# window OR linux
+# windows OR linux
 go env -w GOOS=linux
 go mod tidy
-go build -o ../dist/server.exe src/main.go
+go build -o ../dist/server src/main.go
 
 # Easy Cli
 cd ./Cli
-# window OR linux
+# windows OR linux
 go env -w GOOS=linux
 go mod tidy
-go build -o ../dist/server.exe src/main.go
+go build -o ../dist/cli src/main.go
 ```
 
 
