@@ -28,10 +28,10 @@ func responseApi(context *gin.Context, bodyFunc func(context *gin.Context) (any,
 	})
 }
 
-func responseApiError(context *gin.Context, message string) {
+func responseApiError(context *gin.Context, code, message string) {
 	context.JSON(http.StatusOK, gin.H{
 		"message": message,
-		"code":    "500",
+		"code":    code,
 		"success": false,
 	})
 }
