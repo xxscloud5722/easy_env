@@ -2,6 +2,7 @@ package service
 
 import (
 	"encoding/json"
+	"errors"
 	"github.com/dgraph-io/badger/v4"
 	"github.com/xxscloud5722/easy_env/server/src/bean"
 	"log"
@@ -41,6 +42,9 @@ func (p *Pair) KeyValue(key string) (string, error) {
 		return nil
 	})
 	if err != nil {
+		if errors.Is(err, badger.ErrKeyNotFound) {
+			return "", nil
+		}
 		return "", err
 	}
 	return *result, err
